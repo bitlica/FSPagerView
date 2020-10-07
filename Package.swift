@@ -4,7 +4,7 @@ import PackageDescription
 let package = Package(
     name: "FSPagerView",
     products: [
-        .library(name: "FSPagerView", type: .dynamic, targets: ["FSPagerView"])
+        .library(name: "FSPagerView", targets: ["FSPagerView"])
     ],
     targets: [
         .target(name: "FSPagerView", dependencies: [])
