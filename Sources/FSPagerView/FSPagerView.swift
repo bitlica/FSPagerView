@@ -597,7 +597,7 @@ open class FSPagerView: UIView,UICollectionViewDataSource,UICollectionViewDelega
       
         if isIncessant {
           UIView.animate(withDuration: automaticSlidingInterval, animations: {
-            self.collectionView.setContentOffset(contentOffset, animated: true)
+            self.collectionView.setContentOffset(contentOffset, animated: false)
           })
         } else {
           self.collectionView.setContentOffset(contentOffset, animated: true)
