@@ -582,6 +582,23 @@ open class FSPagerView: UIView,UICollectionViewDataSource,UICollectionViewDelega
         self.timer = Timer.scheduledTimer(timeInterval: TimeInterval(self.automaticSlidingInterval), target: self, selector: #selector(self.flipNext(sender:)), userInfo: nil, repeats: true)
         RunLoop.current.add(self.timer!, forMode: .common)
     }
+  
+//    func startAutoScroll() {
+//        Timer.scheduledTimer(timeInterval: 0.02, target: self, selector: #selector(scrollCollectionView), userInfo: nil, repeats: true)
+//    }
+//
+//    @objc func scrollCollectionView() {
+//        let currentOffset = collectionView.contentOffset.x
+//        let newOffset = CGPoint(x: currentOffset + 1, y: 0)
+//        collectionView.setContentOffset(newOffset, animated: false)
+//        
+//        // Check if we've reached the end and reset to the beginning
+//        let contentWidth = collectionView.contentSize.width
+//        if currentOffset >= contentWidth - collectionView.bounds.width {
+//            let middleOffset = contentWidth / 2 - collectionView.bounds.width / 2
+//            collectionView.setContentOffset(CGPoint(x: middleOffset, y: 0), animated: false)
+//        }
+//    }
     
     @objc
     fileprivate func flipNext(sender: Timer?) {
@@ -596,9 +613,9 @@ open class FSPagerView: UIView,UICollectionViewDataSource,UICollectionViewDelega
         }()
       
         if isIncessant {
-          UIView.animate(withDuration: automaticSlidingInterval, animations: {
-            self.collectionView.setContentOffset(contentOffset, animated: false)
-          })
+          let currentOffset = collectionView.contentOffset.x
+          let newOffset = CGPoint(x: currentOffset + 1, y: 0)
+          collectionView.setContentOffset(newOffset, animated: false)
         } else {
           self.collectionView.setContentOffset(contentOffset, animated: true)
         }
