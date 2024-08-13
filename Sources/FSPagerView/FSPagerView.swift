@@ -103,10 +103,6 @@ open class FSPagerView: UIView,UICollectionViewDataSource,UICollectionViewDelega
             }
         }
     }
-  
-    /// Speed of automatic sliding. Values in range 0-10 . Default is 3
-    @IBInspectable
-    open var isIncessant: Bool = false
     
     /// The spacing to use between items in the pager view. Default is 0.
     @IBInspectable
@@ -164,6 +160,10 @@ open class FSPagerView: UIView,UICollectionViewDataSource,UICollectionViewDelega
         set { self.collectionView.alwaysBounceVertical = newValue }
         get { return self.collectionView.alwaysBounceVertical }
     }
+  
+    /// If true scrolls items without pauses. Speed value is automaticSlidingInterval. Default is false
+    @IBInspectable
+    open var isIncessant: Bool = false
     
     /// A Boolean value that controls whether the infinite loop is removed if there is only one item. Default is false.
     @IBInspectable
@@ -582,41 +582,25 @@ open class FSPagerView: UIView,UICollectionViewDataSource,UICollectionViewDelega
         self.timer = Timer.scheduledTimer(timeInterval: TimeInterval(self.automaticSlidingInterval), target: self, selector: #selector(self.flipNext(sender:)), userInfo: nil, repeats: true)
         RunLoop.current.add(self.timer!, forMode: .common)
     }
-  
-//    func startAutoScroll() {
-//        Timer.scheduledTimer(timeInterval: 0.02, target: self, selector: #selector(scrollCollectionView), userInfo: nil, repeats: true)
-//    }
-//
-//    @objc func scrollCollectionView() {
-//        let currentOffset = collectionView.contentOffset.x
-//        let newOffset = CGPoint(x: currentOffset + 1, y: 0)
-//        collectionView.setContentOffset(newOffset, animated: false)
-//        
-//        // Check if we've reached the end and reset to the beginning
-//        let contentWidth = collectionView.contentSize.width
-//        if currentOffset >= contentWidth - collectionView.bounds.width {
-//            let middleOffset = contentWidth / 2 - collectionView.bounds.width / 2
-//            collectionView.setContentOffset(CGPoint(x: middleOffset, y: 0), animated: false)
-//        }
-//    }
     
     @objc
     fileprivate func flipNext(sender: Timer?) {
         guard let _ = self.superview, let _ = self.window, self.numberOfItems > 0, !self.isTracking else {
             return
         }
-        let contentOffset: CGPoint = {
-            let indexPath = self.centermostIndexPath
-            let section = self.numberOfSections > 1 ? (indexPath.section+(indexPath.item+1)/self.numberOfItems) : 0
-            let item = (indexPath.item+1) % self.numberOfItems
-            return self.collectionViewLayout.contentOffset(for: IndexPath(item: item, section: section))
-        }()
-      
+        
         if isIncessant {
           let currentOffset = collectionView.contentOffset.x
           let newOffset = CGPoint(x: currentOffset + 1, y: 0)
           collectionView.setContentOffset(newOffset, animated: false)
         } else {
+          let contentOffset: CGPoint = {
+              let indexPath = self.centermostIndexPath
+              let section = self.numberOfSections > 1 ? (indexPath.section+(indexPath.item+1)/self.numberOfItems) : 0
+              let item = (indexPath.item+1) % self.numberOfItems
+              return self.collectionViewLayout.contentOffset(for: IndexPath(item: item, section: section))
+          }()
+          
           self.collectionView.setContentOffset(contentOffset, animated: true)
         }
     }
